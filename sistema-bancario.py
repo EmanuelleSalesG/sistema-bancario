@@ -1,62 +1,39 @@
-menu = """
+from operacoes_conta import *
 
-[d] Depositar
-[s] Sacar
-[e] Extrato
+usuario_login = """
+============ BANK DIO BOOTCAMP ============
+[1] Criar conta
+[2] Conta Corrente
 [q] Sair
+==> """
 
-=>"""
-
-saldo = 0
-limite = 500
-extrato = ""
-numero_saques = 0
-LIMITE_SAQUES = 3
-
-deposito = 0
+usuarios = []
 
 while True:
-    opcao = input(menu)
-    
-    #DEPOSITO
-    if opcao == "d":
-        deposito = float(input("Infome o valor a ser depositado: "))
+    opcao = input(usuario_login)
+
+    if opcao == '1':
+        print("============ CADASTRO ============")
+        cadastrar(usuarios)
+
+    elif opcao == '2':
+        print("============ BUSCAR USUÁRIO ============")
+        cpf =  input("CPF (Apenas números): ")
+        numero_conta = input("Número da conta: ")
+        usuario_encontrado = False
+
+        for usuario in usuarios:
+            if usuario["cpf"] == cpf:
+                for conta in usuario["contas"]:
+                    if conta["numero_conta"] == numero_conta:
+                       operacoes_da_conta(usuario, conta)
+                       usuario_encontrado = True
         
-        if deposito > 0:
-            saldo += deposito
-            extrato += f"Deposito: R${deposito:.2f}\n"
-            print(f"R${saldo:.2f} depositado.")
-        else:
-            print("Insira um valor válido para depósito.")
-    
-    #SAQUE
-    elif opcao == "s":
-        if numero_saques < LIMITE_SAQUES and saldo > 0:
-        
-                saque = float(input("Informe o valor do saque: "))
+        if not usuario_encontrado:
+            print("\nErro! Conta não encontrada")
 
-                if saque > 0 and saque <= saldo and saque <= 500:
-                    saldo -= saque
-                    extrato += f"Saque: R${saque:.2f}\n"
-                    numero_saques += 1
-                    print(f"Saque de R${saque:.2f} realizado.") 
+    elif opcao == 'q':
+        break;
 
-                elif saldo < saque:
-                    print("Saldo insuficiente.")
-
-                else:
-                    mensagem = "Limite de saque excedido." if saque > 500 else "Informe um valor válido."
-                    print(mensagem)
-                
-        else:
-            mensagem = "Número de saques excedido." if numero_saques >= LIMITE_SAQUES else "Saldo insuficiente."  
-            print(mensagem)
-
-    #EXTRATO
-    elif opcao == "e":
-        print(f"{extrato}\nTotal disponível: R${saldo:.2f}.")
-
-    elif opcao == "q":
-        break
     else:
-        print("Operação inválida, por favor selecione novamente a operação desejada.")
+        print("Opção inválida.")
